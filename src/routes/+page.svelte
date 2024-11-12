@@ -30,22 +30,28 @@
 
 <svelte:document onselectionchange={debounce(handleSelectionChange)} />
 
-<div
-	contenteditable
-	bind:this={editor}
-	onblur={handleSelectionChange}
-	class="border-2 border-black p-4"
->
+<div contenteditable bind:this={editor} onblur={handleSelectionChange} class="p-4">
+	<emphasis level="moderate">This is an important announcement</emphasis>
 	This is editable text with a
-	<break time="3s" data-time="3s"></break>
+	<break time="3s"></break>
 	pause in the middle.
 </div>
 
 <style lang="postcss">
-	break {
-		@apply bg-yellow-300;
-	}
-	break::after {
-		content: attr(data-time);
+	div[contenteditable] {
+		@apply overflow-x-hidden leading-[3rem];
+		> * {
+			@apply bg-yellow-200;
+		}
+		> emphasis {
+			@apply relative;
+			&::before {
+				@apply absolute -top-4 whitespace-pre bg-black text-xs text-white;
+				content: attr(level) ' emphasis\A';
+			}
+		}
+		> break::before {
+			content: attr(time);
+		}
 	}
 </style>
