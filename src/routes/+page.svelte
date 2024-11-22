@@ -30,8 +30,11 @@
 
 <svelte:document onselectionchange={debounce(handleSelectionChange)} />
 
-<div contenteditable bind:this={editor} onblur={handleSelectionChange} class="p-4">
-	<emphasis level="moderate">This is an important announcement</emphasis>
+<!-- svelte-ignore element_invalid_self_closing_tag -->
+<div contenteditable="true" bind:this={editor} onblur={handleSelectionChange} class="p-4">
+	<mark />
+	<emphasis level="moderate">This is an important announcement.</emphasis>
+	<mark />
 	This is editable text with a
 	<break time="3s"></break>
 	pause in the middle.
@@ -40,18 +43,25 @@
 <style lang="postcss">
 	div[contenteditable] {
 		@apply overflow-x-hidden leading-[3rem];
-		> * {
-			@apply bg-yellow-200;
+		> break {
+			@apply bg-yellow-300;
+			&::before {
+				content: attr(time);
+			}
 		}
 		> emphasis {
-			@apply relative;
+			@apply relative border-t-2 border-yellow-300;
 			&::before {
-				@apply absolute -top-4 whitespace-pre bg-black text-xs text-white;
+				@apply absolute -top-4 whitespace-pre bg-yellow-300 text-xs text-black;
 				content: attr(level) ' emphasis\A';
 			}
 		}
-		> break::before {
-			content: attr(time);
+		> mark {
+			@apply !bg-transparent;
+			&::before {
+				content: '|';
+				@apply font-extrabold;
+			}
 		}
 	}
 </style>
